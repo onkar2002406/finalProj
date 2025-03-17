@@ -6,3 +6,4 @@ pandas
 pillow
 gunicorn
 tensorflow-cpu
+gdown

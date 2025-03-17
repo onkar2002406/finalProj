@@ -8,14 +8,34 @@ import os
 
 app = Flask(__name__)
 
-# Ensure upload directory exists
-UPLOAD_FOLDER = 'static/uploads'
-os.makedirs(UPLOAD_FOLDER, exist_ok=True)
+import os
+import gdown  # to download from Google Drive
 
-# Load tokenizer and models once
-tokenizer = pickle.load(open('models/tokenizer.pkl', 'rb'))
-caption_model = load_model('models/model.keras')
-feature_extractor = load_model('models/feature_extractor.keras')
+MODEL_DIR = 'models'
+os.makedirs(MODEL_DIR, exist_ok=True)
+
+# URLs from your uploaded files (replace with your links)
+TOKENIZER_URL = 'https://drive.google.com/file/d/1CMTOfRjImcWAQU5jCXnZ41OvvER-HYLt/view?usp=drive_link'
+MODEL_URL = ' https://drive.google.com/file/d/16qeaFL_r6jjEw2VCZDp2uszAPEI8NH7v/view?usp=drive_link'
+FEATURE_EXTRACTOR_URL = 'https://drive.google.com/file/d/1mq2w5HFpRXAonDXl6H2wVOV8aSmbiqyz/view?usp=drive_link'
+
+def download_file(url, output):
+    if not os.path.exists(output):
+        gdown.download(url, output, quiet=False)
+
+# Auto-download models
+download_file(TOKENIZER_URL, os.path.join(MODEL_DIR, 'tokenizer.pkl'))
+download_file(MODEL_URL, os.path.join(MODEL_DIR, 'model.keras'))
+download_file(FEATURE_EXTRACTOR_URL, os.path.join(MODEL_DIR, 'feature_extractor.keras'))
+
+# Now, load the models
+import pickle
+from tensorflow.keras.models import load_model
+
+tokenizer = pickle.load(open(os.path.join(MODEL_DIR, 'tokenizer.pkl'), 'rb'))
+caption_model = load_model(os.path.join(MODEL_DIR, 'model.keras'))
+feature_extractor = load_model(os.path.join(MODEL_DIR, 'feature_extractor.keras'))
+
 
 max_length = 34
 
