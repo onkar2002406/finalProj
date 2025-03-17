@@ -13,9 +13,9 @@ UPLOAD_FOLDER = 'static/uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 # Load tokenizer and models once
-tokenizer = pickle.load(open('tokenizer.pkl', 'rb'))
-caption_model = load_model('model.keras')
-feature_extractor = load_model('feature_extractor.keras')
+tokenizer = pickle.load(open('models/tokenizer.pkl', 'rb'))
+caption_model = load_model('models/model.keras')
+feature_extractor = load_model('models/feature_extractor.keras')
 
 max_length = 34
 
