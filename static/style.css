@@ -1,0 +1,54 @@
+body {
+    font-family: 'Poppins', sans-serif;
+    background-color: #121212;
+    color: #ffffff;
+    background-image: url("../static/uploads/black-brick-patterned-background_53876-148452.avif");
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+}
+  
+
+.container {
+  text-align: center;
+}
+
+.card {
+  background-color: #1e1e1e; /* Dark card */
+  color: #ffffff;
+  border-radius: 15px;
+  padding: 30px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.preview img {
+  max-height: 350px;
+  object-fit: cover;
+  border-radius: 10px;
+  border: 2px solid #007bff;
+}
+
+.caption-box {
+  border-top: 2px solid #007bff;
+  padding: 15px;
+  background: #222222; /* Darker background */
+  border-radius: 10px;
+  color: #ffffff;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border: none;
+  transition: 0.3s;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+}
+
+.caption-text {
+  font-size: 1.8em;
+  font-weight: bold;
+  text-align: center;
+  color: #ffffff;
+}
