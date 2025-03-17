@@ -1,0 +1,6 @@
+venv/
+*.keras
+*.pkl
+__pycache__/
+.DS_Store
+static/uploads/
