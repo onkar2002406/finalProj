@@ -5,37 +5,36 @@ from tensorflow.keras.preprocessing.image import load_img, img_to_array
 import numpy as np
 import pickle
 import os
+import gdown
 
 app = Flask(__name__)
 
-import os
-import gdown  # to download from Google Drive
+# Uploads
+UPLOAD_FOLDER = 'static/uploads'
+os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
+# Models directory
 MODEL_DIR = 'models'
 os.makedirs(MODEL_DIR, exist_ok=True)
 
-# URLs from your uploaded files (replace with your links)
-TOKENIZER_URL = 'https://drive.google.com/file/d/1CMTOfRjImcWAQU5jCXnZ41OvvER-HYLt/view?usp=drive_link'
-MODEL_URL = ' https://drive.google.com/file/d/16qeaFL_r6jjEw2VCZDp2uszAPEI8NH7v/view?usp=drive_link'
-FEATURE_EXTRACTOR_URL = 'https://drive.google.com/file/d/1mq2w5HFpRXAonDXl6H2wVOV8aSmbiqyz/view?usp=drive_link'
+# Correct Google Drive direct-download links
+TOKENIZER_URL = 'https://drive.google.com/uc?id=1CMTOfRjImcWAQU5jCXnZ41OvvER-HYLt'
+MODEL_URL = 'https://drive.google.com/uc?id=16qeaFL_r6jjEw2VCZDp2uszAPEI8NH7v'
+FEATURE_EXTRACTOR_URL = 'https://drive.google.com/uc?id=1mq2w5HFpRXAonDXl6H2wVOV8aSmbiqyz'
 
 def download_file(url, output):
     if not os.path.exists(output):
         gdown.download(url, output, quiet=False)
 
-# Auto-download models
+# Auto-download models (this will now correctly download)
 download_file(TOKENIZER_URL, os.path.join(MODEL_DIR, 'tokenizer.pkl'))
 download_file(MODEL_URL, os.path.join(MODEL_DIR, 'model.keras'))
 download_file(FEATURE_EXTRACTOR_URL, os.path.join(MODEL_DIR, 'feature_extractor.keras'))
 
-# Now, load the models
-import pickle
-from tensorflow.keras.models import load_model
-
+# Load downloaded models
 tokenizer = pickle.load(open(os.path.join(MODEL_DIR, 'tokenizer.pkl'), 'rb'))
 caption_model = load_model(os.path.join(MODEL_DIR, 'model.keras'))
 feature_extractor = load_model(os.path.join(MODEL_DIR, 'feature_extractor.keras'))
-
 
 max_length = 34
 
@@ -53,7 +52,6 @@ def generate_caption(image_features):
         sequence = tokenizer.texts_to_sequences([caption])[0]
         sequence = pad_sequences([sequence], maxlen=max_length)
 
-        # Proper input shapes for model
         yhat = caption_model.predict([image_features, sequence], verbose=0)
         idx = np.argmax(yhat)
         word = tokenizer.index_word.get(idx, None)
@@ -79,7 +77,6 @@ def upload():
 
     processed_image = preprocess_image(image_path)
     features = extract_features(processed_image)
-
     caption = generate_caption(features)
 
     return jsonify(status='success', caption=caption)
